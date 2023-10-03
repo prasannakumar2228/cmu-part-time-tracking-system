@@ -1,0 +1,22 @@
+.navbar_backgroundcolor {
+    background-color: white;
+    border-radius: 3px;
+    height: 4rem;
+}
+.nav-background {
+    background-color: #6a0032 !important;
+}
+.nav_link {
+    color: white !important;
+    position: relative;
+    letter-spacing: 0.5px !important;
+    font-weight: 600 !important;
+    font-size: larger !important;
+}
+.central_logo {
+    justify-content: center;
+}
+.loginCard {
+    margin: 0px 100px 0px 100px !important;
+    justify-content: center !important;
+}
