@@ -16,7 +16,7 @@
 .central_logo {
     justify-content: center;
 }
-.loginCard {
-    margin: 0px 100px 0px 100px !important;
-    justify-content: center !important;
+.loginpageHeading {
+    color: #6a0032 !important;
+    font-weight: bolder !important;
 }
