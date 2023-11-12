@@ -9,21 +9,88 @@ import logo from "../Images/cmich_logo.png";
 import { Card, Col, Row } from "react-bootstrap";
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
+import { MdOutlineDeleteOutline, MdOutlineEdit } from "react-icons/md";
+
 import Spinner from "react-bootstrap/Spinner";
 import { getJobApplications } from "../redux/student";
 
 function StudentHomePage() {
-  const rows = [
-    { id: 1, col1: "Hello", col2: "World" },
-    { id: 2, col1: "DataGridPro", col2: "is Awesome" },
-    { id: 3, col1: "MUI", col2: "is Amazing" },
-  ];
-
   const columns = [
-    { field: "col1", headerName: "Department Name", width: 500 },
-    { field: "col2", headerName: "Location", width: 400 },
-    { field: "col3", headerName: "No. of Applications", width: 200 },
-    { field: "col4", headerName: "Details", width: 200 },
+    {
+      field: "AcademicStatus",
+      headerName: "Academic Status",
+      width: 200,
+      label: (params) => {
+        return <span className="">{params.row.AcademicStatus}</span>;
+      },
+    },
+    {
+      field: "ApplicationStatus",
+      headerName: "Application Status",
+      width: 200,
+      label: (params) => {
+        return <span className="">{params.row.ApplicationStatus}</span>;
+      },
+    },
+    {
+      field: "DesiredWorkHours",
+      headerName: "Work Hours",
+      width: 100,
+      label: (params) => {
+        return <span className="">{params.row.DesiredWorkHours}</span>;
+      },
+    },
+    {
+      field: "Skills",
+      headerName: "Skills",
+      width: 200,
+      label: (params) => {
+        return <span className="">{params.row.Skills}</span>;
+      },
+    },
+    {
+      field: "Experience",
+      headerName: "Experience",
+      width: 200,
+      label: (params) => {
+        return <span className="">{params.row.Experience}</span>;
+      },
+    },
+    {
+      field: "Student",
+      headerName: "Applied Student",
+      width: 200,
+      label: (params) => {
+        return <span className="">{params.row.Student}</span>;
+      },
+    },
+    {
+      headerName: "Actions",
+      width: 100,
+      renderCell: (params) => {
+        return (
+          <div className="d-flex">
+            <div style={{ marginRight: "5px" }}>
+              <Button variant="outline-info">
+                <MdOutlineEdit
+                // onClick={() => toggle(_row)}
+                />
+              </Button>{" "}
+            </div>
+            <div>
+              <Button variant="outline-danger">
+                <MdOutlineDeleteOutline
+                  size="1rem"
+                  // onClick={() => {
+                  //   handleDelete(_row);
+                  // }}
+                />
+              </Button>{" "}
+            </div>
+          </div>
+        );
+      },
+    },
   ];
 
   const dispatch = useDispatch();
@@ -32,9 +99,9 @@ function StudentHomePage() {
     dispatch(getJobApplications());
   }, [dispatch]);
 
-  const jobApplications = useSelector((state) => state.home.jobPosts);
-  const isLoading = useSelector((state) => state.home.isLoading);
-  const error = useSelector((state) => state.home.error);
+  const jobApp = useSelector((state) => state.student.jobApplications);
+  const isLoading = useSelector((state) => state.student.isLoading);
+  const error = useSelector((state) => state.student.error);
 
   if (isLoading) {
     return (
@@ -48,7 +115,7 @@ function StudentHomePage() {
     return <h1>{error}</h1>;
   }
 
-  window.console.log(jobApplications);
+  window.console.log(jobApp);
 
   return (
     <>
@@ -80,7 +147,20 @@ function StudentHomePage() {
           <Card.Body>
             <Row>
               <Col>
-                <DataGrid rows={rows} columns={columns} />
+                <DataGrid
+                  {...jobApp}
+                  rows={jobApp}
+                  columns={columns}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 5,
+                      },
+                    },
+                  }}
+                  pageSizeOptions={[5]}
+                  checkboxSelection
+                />
               </Col>
             </Row>
           </Card.Body>

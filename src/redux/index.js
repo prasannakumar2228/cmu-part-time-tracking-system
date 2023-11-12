@@ -9,8 +9,8 @@ const store = configureStore({
   reducer: {
     home: homeReducer,
     loginReducer,
-    managerReducer,
-    studentReducer,
+    manager: managerReducer,
+    student: studentReducer,
   },
 });
 

@@ -7,13 +7,13 @@ const initialState = {
   error: null,
 };
 
-export const getJobs = createAsyncThunk("home/getJobs", async () => {
+export const getJobs = createAsyncThunk("manager/getJobs", async () => {
   const { data } = await axios.get("http://127.0.0.1:8000/api/jobposts/");
   return data;
 });
 
 export const homeSlice = createSlice({
-  name: "home",
+  name: "manager",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -22,7 +22,7 @@ export const homeSlice = createSlice({
     });
     builder.addCase(getJobs.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.photos = action.payload;
+      state.jobPosts = action.payload;
     });
     builder.addCase(getJobs.rejected, (state, action) => {
       state.isLoading = false;

@@ -12,7 +12,7 @@ import Spinner from "react-bootstrap/Spinner";
 import { postLogin } from "../redux/login";
 
 function LoginPage() {
-  const [userName, setUserName] = useState("");
+  const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
@@ -34,9 +34,10 @@ function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const userData = { userName, password };
-    window.console.log(userData);
-    dispatch(postLogin(userData));
+    const userData = { username, password };
+    const data = JSON.stringify(userData);
+    window.console.log(data);
+    dispatch(postLogin(data));
     // window.location.href = "/";
   };
 
@@ -64,8 +65,8 @@ function LoginPage() {
                     <Form.Group className="mb-3" controlId="formGroupEmail">
                       <Form.Label>Email address</Form.Label>
                       <Form.Control
-                        type="email"
-                        value={userName}
+                        type="text"
+                        value={username}
                         onChange={(e) => setUserName(e.target.value)}
                         placeholder="Enter email"
                       />

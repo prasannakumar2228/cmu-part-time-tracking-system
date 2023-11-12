@@ -6,13 +6,15 @@ import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import logo from "../Images/cmich_logo.png";
-import { Col, Row, Card } from "react-bootstrap";
+import { Col, Row, Card, Tooltip } from "react-bootstrap";
+import moment from "moment";
 import { DataGrid } from "@mui/x-data-grid";
 import Modal from "react-bootstrap/Modal";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { format } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
+import { MdOutlineDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import Spinner from "react-bootstrap/Spinner";
 import { getJobs } from "../redux/manager";
 
@@ -28,26 +30,97 @@ function ManagerHomePage(props) {
     dispatch(getJobs());
   }, [dispatch]);
 
-  const jobs = useSelector((state) => state.home.jobPosts);
-  const isLoading = useSelector((state) => state.home.isLoading);
-  const error = useSelector((state) => state.home.error);
+  const jobs = useSelector((state) => state.manager.jobPosts);
+  const isLoading = useSelector((state) => state.manager.isLoading);
+  const error = useSelector((state) => state.manager.error);
 
   const handleDateChange = (date) => {
     setDate(date);
   };
 
-  const rows = [
-    { id: 1, col1: "Hello", col2: "World" },
-    { id: 2, col1: "DataGridPro", col2: "is Awesome" },
-    { id: 3, col1: "MUI", col2: "is Amazing" },
-  ];
+  // const rows = [
+  //   { id: 1, col1: "Hello", col2: "World" },
+  //   { id: 2, col1: "DataGridPro", col2: "is Awesome" },
+  //   { id: 3, col1: "MUI", col2: "is Amazing" },
+  // ];
 
   const columns = [
-    { field: "col1", headerName: "Department Name", width: 400 },
-    { field: "col2", headerName: "Job Type", width: 300 },
-    { field: "col3", headerName: "No. of Applications", width: 200 },
-    { field: "col4", headerName: "Details", width: 200 },
-    { field: "col5", headerName: "Actions", width: 200 },
+    {
+      field: "Title",
+      headerName: "Department Name",
+      width: 300,
+      label: (params) => {
+        return <span className="">{params.row.Title}</span>;
+      },
+    },
+    {
+      field: "NumberOfOpenings",
+      headerName: "Openings",
+      width: 100,
+      label: (params) => {
+        return <span className="">{params.row.NumberOfOpenings}</span>;
+      },
+    },
+    {
+      field: "Experience",
+      headerName: "Experience",
+      width: 300,
+      label: (params) => {
+        return <span className="">{params.row.Experience}</span>;
+      },
+    },
+    {
+      field: "WorkHours",
+      headerName: "Work Hours",
+      width: 100,
+      label: (params) => {
+        return <span className="">{params.row.WorkHours}</span>;
+      },
+    },
+    {
+      field: "Deadline",
+      headerName: "Deadline",
+      width: 200,
+
+      renderCell: (params) => (
+        <div>{moment(params.row.Deadline).format("MM-DD-YYYY")}</div>
+      ),
+    },
+    {
+      field: "Status",
+      headerName: "Status",
+      width: 100,
+      label: (params) => {
+        return <span className="">{params.row.Status}</span>;
+      },
+    },
+    {
+      headerName: "Actions",
+      width: 100,
+      renderCell: (params) => {
+        return (
+          <div className="d-flex">
+            <div style={{ marginRight: "5px" }}>
+              <Button variant="outline-info">
+                <MdOutlineEdit
+                // onClick={() => toggle(_row)}
+                />
+              </Button>{" "}
+            </div>
+            <div>
+              <Button variant="outline-danger">
+                <MdOutlineDeleteOutline
+                  size="1rem"
+                  // onClick={() => {
+                  //   handleDelete(_row);
+                  // }}
+                />
+              </Button>{" "}
+            </div>
+          </div>
+        );
+      },
+    },
   ];
 
   if (isLoading) {
@@ -99,7 +172,20 @@ function ManagerHomePage(props) {
           <Card.Body>
             <Row>
               <Col>
-                <DataGrid rows={rows} columns={columns} />
+                <DataGrid
+                  {...jobs}
+                  rows={jobs}
+                  columns={columns}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 5,
+                      },
+                    },
+                  }}
+                  pageSizeOptions={[5]}
+                  checkboxSelection
+                />
               </Col>
             </Row>
           </Card.Body>

@@ -167,9 +167,10 @@ function SignupPage({ authSignUp }) {
         email: values.Email,
       },
     };
+    const SignUpData = JSON.stringify(data);
 
-    window.console.log(data);
-    dispatch(postSignup(data));
+    window.console.log(SignUpData);
+    dispatch(postSignup(SignUpData));
   };
 
   return (
