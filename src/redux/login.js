@@ -7,10 +7,15 @@ const initialState = {
   error: null,
 };
 
-export const postLogin = createAsyncThunk("home/postLogin", async () => {
-  const { data } = await axios.post("http://127.0.0.1:8000/api/login");
-  return data;
-});
+export const postLogin = createAsyncThunk(
+  "home/postLogin",
+  async (userData) => {
+    const { data } = await axios.post("http://127.0.0.1:8000/api/login/", {
+      userData,
+    });
+    return data;
+  }
+);
 
 export const homeSlice = createSlice({
   name: "home",

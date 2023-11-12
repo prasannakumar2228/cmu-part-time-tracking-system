@@ -1,10 +1,13 @@
+/* eslint-disable no-unused-expressions */
 import React, { useState } from "react";
 import Container from "react-bootstrap/Container";
+import { useNavigate } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import axios from "axios";
 import "./styles.css";
 import cmichImage from "../Images/login_background.png";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,33 +15,60 @@ import Spinner from "react-bootstrap/Spinner";
 import { postLogin } from "../redux/login";
 
 function LoginPage() {
+  const history = useNavigate();
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const isLoading = useSelector((state) => state.home.isLoading);
-  const error = useSelector((state) => state.home.error);
+  // const isLoading = useSelector((state) => state.home.isLoading);
+  // const error = useSelector((state) => state.home.error);
 
-  if (isLoading) {
-    return (
-      <h1>
-        <Spinner animation="grow" />
-      </h1>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <h1>
+  //       <Spinner animation="grow" />
+  //     </h1>
+  //   );
+  // }
 
-  if (error) {
-    return <h1>{error}</h1>;
-  }
+  // if (error) {
+  //   return <h1>{error}</h1>;
+  // }
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const userData = { username, password };
+  //   dispatch(postLogin(JSON.stringify(userData)));
+  //   // window.location.href = "/";
+  // };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const userData = { username, password };
-    const data = JSON.stringify(userData);
-    window.console.log(data);
-    dispatch(postLogin(data));
-    // window.location.href = "/";
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/login/",
+        {
+          // Convert data to JSON string using JSON.stringify
+          username,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json", // Set the content type to JSON
+          },
+        }
+      );
+
+      // Handle successful login, e.g., store the token in localStorage
+      console.log("Login successful!", response.data);
+      history("/manager-homepage");
+    } catch (error) {
+      // Handle login failure
+      console.error("Login failed!", error.message);
+      setError("Login failed. Please check your username and password.");
+    }
   };
 
   return (
@@ -61,7 +91,7 @@ function LoginPage() {
                     Login Page
                   </Card.Title>
                   <hr />
-                  <Form onSubmit={handleSubmit}>
+                  <Form>
                     <Form.Group className="mb-3" controlId="formGroupEmail">
                       <Form.Label>Email address</Form.Label>
                       <Form.Control
@@ -95,13 +125,15 @@ function LoginPage() {
                           variant="light"
                           style={{ backgroundColor: "#6a0032", color: "#fff" }}
                           type="submit"
-                          // onClick={() => handleSignUp()}
+                          onClick={handleLogin}
                         >
                           Sign in
                         </Button>
                       </Col>
                     </Form.Group>
                   </Form>
+                  {error && <p style={{ color: "red" }}>{error}</p>}
+
                   <Card.Text>
                     New to this Account ?{" "}
                     <Card.Link href="/sign-up" style={{ color: "#6a0032" }}>

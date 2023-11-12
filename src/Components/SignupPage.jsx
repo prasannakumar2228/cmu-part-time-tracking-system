@@ -7,6 +7,8 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import cmichImage from "../Images/login_background.png";
@@ -17,9 +19,13 @@ import Spinner from "react-bootstrap/Spinner";
 import { postSignup } from "../redux/signUp";
 
 function SignupPage({ authSignUp }) {
+  const history = useNavigate();
+  const [error, setError] = useState("");
+
   const options = [
-    { value: "STUDENT", label: "STUDENT" },
-    { value: "MANAGER", label: "MANAGER" },
+    { value: "Student", label: "STUDENT" },
+    { value: "Manager", label: "MANAGER" },
+    { value: "Admin", label: "STUDENT" },
   ];
 
   const dispatch = useDispatch();
@@ -130,47 +136,90 @@ function SignupPage({ authSignUp }) {
     // onSubmit,
   });
 
-  const isLoading = useSelector((state) => state.home.isLoading);
-  const error = useSelector((state) => state.home.error);
+  // const isLoading = useSelector((state) => state.home.isLoading);
+  // const error = useSelector((state) => state.home.error);
 
-  if (isLoading) {
-    return (
-      <h1>
-        <Spinner animation="grow" />
-      </h1>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <h1>
+  //       <Spinner animation="grow" />
+  //     </h1>
+  //   );
+  // }
 
-  if (error) {
-    return <h1>{error}</h1>;
-  }
+  // if (error) {
+  //   return <h1>{error}</h1>;
+  // }
+
+  // const handleClick = async () => {
+  //   const data = {
+  //     First_Name: values.First_Name,
+  //     Last_Name: values.Last_Name,
+  //     Phone: values.Phone,
+  //     Email: values.Email,
+  //     Role: values.Role.value,
+  //     DOB: "",
+  //     Gender: "",
+  //     active: true,
+  //     City: "",
+  //     State: "Michigan",
+  //     Zipcode: "48858",
+  //     Country: "United States",
+  //     user: {
+  //       username: values.username,
+  //       password: values.password,
+  //       first_name: values.First_Name,
+  //       last_name: values.Last_Name,
+  //       email: values.Email,
+  //     },
+  //   };
+  //   const SignUpData = JSON.stringify(data);
+
+  //   window.console.log(SignUpData);
+  //   dispatch(postSignup(SignUpData));
+  // };
 
   const handleClick = async () => {
-    const data = {
-      First_Name: values.First_Name,
-      Last_Name: values.Last_Name,
-      Phone: values.Phone,
-      Email: values.Email,
-      Role: values.Role.value,
-      DOB: "",
-      Gender: "",
-      active: true,
-      City: "",
-      State: "Michigan",
-      Zipcode: "48858",
-      Country: "United States",
-      user: {
-        username: values.username,
-        password: values.password,
-        first_name: values.First_Name,
-        last_name: values.Last_Name,
-        email: values.Email,
-      },
-    };
-    const SignUpData = JSON.stringify(data);
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/profiles",
+        {
+          // Convert data to JSON string using JSON.stringify
+          First_Name: values.First_Name,
+          Last_Name: values.Last_Name,
+          Phone: values.Phone,
+          Email: values.Email,
+          Role: values.Role.value,
+          DOB: "2023-11-13",
+          Gender: "M",
+          active: true,
+          City: "",
+          State: "Michigan",
+          Zipcode: "48858",
+          Country: "United States",
+          user: {
+            username: values.username,
+            password: values.password,
+            first_name: values.First_Name,
+            last_name: values.Last_Name,
+            email: values.Email,
+          },
+        },
+        {
+          headers: {
+            "Content-Type": "application/json", // Set the content type to JSON
+          },
+        }
+      );
 
-    window.console.log(SignUpData);
-    dispatch(postSignup(SignUpData));
+      // Handle successful login, e.g., store the token in localStorage
+      console.log("Signup successful!", response.data);
+      // history("/manager-homepage");
+    } catch (error) {
+      // Handle login failure
+      console.error("signup failed!", error.message);
+      setError("signup failed...");
+    }
   };
 
   return (
