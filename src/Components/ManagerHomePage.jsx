@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./styles.css";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
+import { useNavigate } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
@@ -16,9 +17,11 @@ import { format } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
 import { MdOutlineDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import Spinner from "react-bootstrap/Spinner";
-import { getJobs } from "../redux/manager";
+import { getJobs, deleteJob } from "../redux/manager";
 
 function ManagerHomePage(props) {
+  const history = useNavigate();
+
   const [modalShow, setModalShow] = React.useState(false);
   const handleClose = () => setModalShow(false);
   const handleShow = () => setModalShow(true);
@@ -38,11 +41,30 @@ function ManagerHomePage(props) {
     setDate(date);
   };
 
+  const handleDelete = (id) => {
+    dispatch(deleteJob(id))
+      .unwrap()
+      .then(() => {
+        console.log("Job post deleted successfully");
+      })
+      .catch((error) => {
+        console.error("Error deleting job post", error);
+      });
+    window.location.reload();
+  };
+
   // const rows = [
   //   { id: 1, col1: "Hello", col2: "World" },
   //   { id: 2, col1: "DataGridPro", col2: "is Awesome" },
   //   { id: 3, col1: "MUI", col2: "is Amazing" },
   // ];
+
+  const handlePage = (data) => {
+    window.console.log(data?.row);
+    if (data?.row?.id) {
+      history(`/post-job/${data?.row?.id}`);
+    }
+  };
 
   const columns = [
     {
@@ -102,18 +124,14 @@ function ManagerHomePage(props) {
           <div className="d-flex">
             <div style={{ marginRight: "5px" }}>
               <Button variant="outline-info">
-                <MdOutlineEdit
-                // onClick={() => toggle(_row)}
-                />
+                <MdOutlineEdit onClick={() => handlePage(params)} />
               </Button>{" "}
             </div>
             <div>
               <Button variant="outline-danger">
                 <MdOutlineDeleteOutline
                   size="1rem"
-                  // onClick={() => {
-                  //   handleDelete(_row);
-                  // }}
+                  onClick={() => handleDelete(params.row.id)}
                 />
               </Button>{" "}
             </div>
@@ -153,7 +171,7 @@ function ManagerHomePage(props) {
           </Nav.Link>
         </Nav> */}
           <Nav>
-            <Nav.Link className="nav_link" to="/" as={Link}>
+            <Nav.Link className="nav_link" to="/post-job" as={Link}>
               <Button variant="outline-light">Post Job</Button>{" "}
             </Nav.Link>
             <Nav.Link className="nav_link">
@@ -184,7 +202,6 @@ function ManagerHomePage(props) {
                     },
                   }}
                   pageSizeOptions={[5]}
-                  checkboxSelection
                 />
               </Col>
             </Row>

@@ -9,7 +9,7 @@ import logo from "../Images/cmich_logo.png";
 import { Card, Col, Row } from "react-bootstrap";
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
-import { MdOutlineDeleteOutline, MdOutlineEdit } from "react-icons/md";
+// import { MdOutlineDeleteOutline, MdOutlineEdit } from "react-icons/md";
 
 import Spinner from "react-bootstrap/Spinner";
 import { getJobApplications } from "../redux/student";
@@ -43,7 +43,7 @@ function StudentHomePage() {
     {
       field: "Skills",
       headerName: "Skills",
-      width: 200,
+      width: 300,
       label: (params) => {
         return <span className="">{params.row.Skills}</span>;
       },
@@ -66,26 +66,12 @@ function StudentHomePage() {
     },
     {
       headerName: "Actions",
-      width: 100,
+      width: 150,
       renderCell: (params) => {
         return (
           <div className="d-flex">
             <div style={{ marginRight: "5px" }}>
-              <Button variant="outline-info">
-                <MdOutlineEdit
-                // onClick={() => toggle(_row)}
-                />
-              </Button>{" "}
-            </div>
-            <div>
-              <Button variant="outline-danger">
-                <MdOutlineDeleteOutline
-                  size="1rem"
-                  // onClick={() => {
-                  //   handleDelete(_row);
-                  // }}
-                />
-              </Button>{" "}
+              <Button variant="outline-info">Apply Job</Button>{" "}
             </div>
           </div>
         );
@@ -132,11 +118,11 @@ function StudentHomePage() {
             My Account
           </Nav.Link>
         </Nav> */}
-          <Nav>
+          {/* <Nav>
             <Nav.Link className="nav_link" to="/" as={Link}>
               <Button variant="outline-light">Apply Job</Button>{" "}
             </Nav.Link>
-          </Nav>
+          </Nav> */}
         </Container>
       </Navbar>
       <Container fluid className="p-5">
@@ -159,7 +145,6 @@ function StudentHomePage() {
                     },
                   }}
                   pageSizeOptions={[5]}
-                  checkboxSelection
                 />
               </Col>
             </Row>
