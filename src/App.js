@@ -6,6 +6,8 @@ import SignupPage from "./Components/SignupPage";
 import ManagerHomePage from "./Components/ManagerHomePage";
 import PostJob from "./Components/postjob";
 import StudentHomePage from "./Components/StudentHomePage";
+import ApplyJob from "./Components/ApplyJob";
+import StudentApplications from "./Components/StudentApplications";
 
 function App() {
   return (
@@ -18,6 +20,9 @@ function App() {
         <Route path="/post-job" element={<PostJob />} />
         <Route path="/post-job/:id" element={<PostJob />} />
         <Route path="/student-homepage" element={<StudentHomePage />} />
+        <Route path="/apply-job" element={<ApplyJob />} />
+        <Route path="/apply-job/:id" element={<ApplyJob />} />
+        <Route path="/my-applications" element={<StudentApplications />} />
       </Routes>
     </BrowserRouter>
   );

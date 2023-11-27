@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import "./styles.css";
 import Container from "react-bootstrap/Container";
 import Select from "react-select";
+import "react-phone-input-2/lib/style.css";
+import PhoneInput from "react-phone-input-2";
+// import "react-phone-input-2/lib/material.css";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
@@ -25,7 +28,7 @@ function SignupPage({ authSignUp }) {
   const options = [
     { value: "Student", label: "STUDENT" },
     { value: "Manager", label: "MANAGER" },
-    { value: "Admin", label: "STUDENT" },
+    { value: "Admin", label: "ADMIN" },
   ];
 
   const dispatch = useDispatch();
@@ -46,71 +49,33 @@ function SignupPage({ authSignUp }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(true);
+  const [phone, setPhone] = useState("");
 
-  // Event handler for the password input
   const handlePasswordChange = (e) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
-    setPasswordMatch(newPassword === confirmPassword);
+    setPasswordMatch(newPassword === confirmPassword || confirmPassword === "");
   };
 
-  // Event handler for the confirm password input
   const handleConfirmPasswordChange = (e) => {
     const newConfirmPassword = e.target.value;
     setConfirmPassword(newConfirmPassword);
-    setPasswordMatch(password === newConfirmPassword);
+    setPasswordMatch(password === newConfirmPassword || password === "");
   };
 
-  // const onSubmit = async (values, { setSubmitting, resetForm }, e) => {
-  //   e.preventDefault();
-  //   window.console.log(values);
-  //   setSubmitting(true);
-  //   setErrorMsg(null);
-  //   const data = {
-  //     First_Name: values.First_Name,
-  //     Last_Name: values.Last_Name,
-  //     Phone: values.Phone,
-  //     Email: values.Email,
-  //     Role: values.Role.value,
-  //     DOB: "",
-  //     Gender: "",
-  //     active: true,
-  //     City: "",
-  //     State: "Michigan",
-  //     Zipcode: "48858",
-  //     Country: "United States",
-  //     user: {
-  //       username: values.username,
-  //       password: values.password,
-  //       first_name: values.First_Name,
-  //       last_name: values.Last_Name,
-  //       email: values.Email,
-  //     },
-  //   };
-  //   window.console.log(data);
-  //   try {
-  //     dispatch(authSignUp(data));
-  //     resetForm();
-  //     // Toast.fire({
-  //     //   icon: "success",
-  //     //   title: "Account Created Successfully",
-  //     // });
+  const getPasswordValidationColor = () => {
+    if (!touched.password) return "";
+    return errors.password ? "red" : "green";
+  };
 
-  //     // if (saveExit) {
-  //     //   redirect();
-  //     // }
-  //   } catch (error) {
-  //     setErrorMsg(error?.Error);
-  //     window.console.log(error);
-  //   } finally {
-  //     setSubmitting(false);
-  //   }
-  // };
+  const getConfirmPasswordValidationColor = () => {
+    if (!touched.password || !touched.confirmPassword) return "";
+    return passwordMatch ? "green" : "red";
+  };
 
   const {
     getFieldProps,
     handleSubmit,
-    setErrorMsg,
     touched,
     errors,
     isSubmitting,
@@ -136,49 +101,6 @@ function SignupPage({ authSignUp }) {
     // onSubmit,
   });
 
-  // const isLoading = useSelector((state) => state.home.isLoading);
-  // const error = useSelector((state) => state.home.error);
-
-  // if (isLoading) {
-  //   return (
-  //     <h1>
-  //       <Spinner animation="grow" />
-  //     </h1>
-  //   );
-  // }
-
-  // if (error) {
-  //   return <h1>{error}</h1>;
-  // }
-
-  // const handleClick = async () => {
-  //   const data = {
-  //     First_Name: values.First_Name,
-  //     Last_Name: values.Last_Name,
-  //     Phone: values.Phone,
-  //     Email: values.Email,
-  //     Role: values.Role.value,
-  //     DOB: "",
-  //     Gender: "",
-  //     active: true,
-  //     City: "",
-  //     State: "Michigan",
-  //     Zipcode: "48858",
-  //     Country: "United States",
-  //     user: {
-  //       username: values.username,
-  //       password: values.password,
-  //       first_name: values.First_Name,
-  //       last_name: values.Last_Name,
-  //       email: values.Email,
-  //     },
-  //   };
-  //   const SignUpData = JSON.stringify(data);
-
-  //   window.console.log(SignUpData);
-  //   dispatch(postSignup(SignUpData));
-  // };
-
   const handleClick = async () => {
     try {
       const response = await axios.post(
@@ -187,7 +109,7 @@ function SignupPage({ authSignUp }) {
           // Convert data to JSON string using JSON.stringify
           First_Name: values.First_Name,
           Last_Name: values.Last_Name,
-          Phone: values.Phone,
+          Phone: phone,
           Email: values.Email,
           Role: values.Role.value,
           DOB: "2023-11-13",
@@ -214,13 +136,16 @@ function SignupPage({ authSignUp }) {
 
       // Handle successful login, e.g., store the token in localStorage
       console.log("Signup successful!", response.data);
-      // history("/manager-homepage");
+      history("/login");
     } catch (error) {
       // Handle login failure
       console.error("signup failed!", error.message);
       setError("signup failed...");
     }
   };
+
+  const passwordColor = passwordMatch ? "green" : "red";
+  const confirmPasswordColor = passwordMatch ? "green" : "red";
 
   return (
     <>
@@ -248,21 +173,8 @@ function SignupPage({ authSignUp }) {
                         <Form.Group className="mb-3">
                           <Form.Label>First Name</Form.Label>
                           <Form.Control
-                            //   type="text"
-                            //   name="First_Name"
-                            //   placeholder="Enter your first name"
-                            //   value={values.First_Name}
-                            //   // onChange={handleChange}
-                            //   {...getFieldProps("First_Name")}
-                            //   isValid={touched.First_Name && !errors.First_Name}
-                            // />
-                            // {touched.First_Name && errors.First_Name ? (
-                            //   <Form.Control.Feedback>
-                            //     {errors.First_Name}
-                            //   </Form.Control.Feedback>
-                            // ) : null}
-
                             type="text"
+                            placeholder="Enter your first name"
                             name="First_Name"
                             value={values.First_Name}
                             onChange={handleChange}
@@ -319,7 +231,7 @@ function SignupPage({ authSignUp }) {
                       <Col xs="6">
                         <Form.Group className="mb-3">
                           <Form.Label>Phone Number</Form.Label>
-                          <Form.Control
+                          {/* <Form.Control
                             type="number"
                             name="Phone"
                             value={values.Phone}
@@ -331,7 +243,19 @@ function SignupPage({ authSignUp }) {
                             <Form.Control.Feedback>
                               {errors.Phone}
                             </Form.Control.Feedback>
-                          ) : null}
+                          ) : null} */}
+                          <PhoneInput
+                            defaultCountry="us"
+                            value={phone}
+                            onChange={(value) => setPhone(value)}
+                            inputStyle={{
+                              width: "100%",
+                              fontSize: "16px",
+                              borderRadius: "5px",
+                              border: "1px solid #ccc",
+                              boxSizing: "border-box",
+                            }}
+                          />
                         </Form.Group>
                       </Col>
                     </Row>
@@ -378,8 +302,11 @@ function SignupPage({ authSignUp }) {
                             placeholder="Enter Password"
                             value={password}
                             onChange={handlePasswordChange}
+                            style={{
+                              borderColor: getPasswordValidationColor(),
+                            }}
                             minLength="6"
-                            maxLength="13"
+                            maxLength="15"
                             {...getFieldProps("password")}
                             invalid={!!touched.password && !!errors.password}
                           />
@@ -400,18 +327,15 @@ function SignupPage({ authSignUp }) {
                             placeholder="Enter Confirm Password"
                             value={confirmPassword}
                             onChange={handleConfirmPasswordChange}
+                            style={{
+                              borderColor: getConfirmPasswordValidationColor(),
+                            }}
                           />
                         </Form.Group>
                       </Col>
                     </Row>
-                    {passwordMatch === false ? (
-                      passwordMatch ? (
-                        <p>Passwords match.</p>
-                      ) : (
-                        <p>Passwords do not match.</p>
-                      )
-                    ) : (
-                      ""
+                    {!passwordMatch && (
+                      <p style={{ color: "red" }}>Passwords do not match!</p>
                     )}
 
                     <Row>

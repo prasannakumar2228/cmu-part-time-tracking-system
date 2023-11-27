@@ -1,22 +1,53 @@
 .navbar_backgroundcolor {
-    background-color: white;
-    border-radius: 3px;
-    height: 4rem;
+  background-color: white;
+  border-radius: 3px;
+  height: 4rem;
 }
 .nav-background {
-    background-color: #6a0032 !important;
+  background-color: #6a0032 !important;
 }
 .nav_link {
-    color: white !important;
-    position: relative;
-    letter-spacing: 0.5px !important;
-    font-weight: 600 !important;
-    font-size: larger !important;
+  color: white !important;
+  position: relative;
+  letter-spacing: 0.5px !important;
+  font-weight: 600 !important;
+  font-size: larger !important;
 }
 .central_logo {
-    justify-content: center;
+  justify-content: center;
 }
 .loginpageHeading {
-    color: #6a0032 !important;
-    font-weight: bolder !important;
+  color: #6a0032 !important;
+  font-weight: bolder !important;
+}
+.background-container {
+  position: relative;
+}
+
+.white-background {
+  position: absolute;
+  top: 25rem !important;
+  left: 0;
+  width: 50%;
+  height: 20vh; /* Adjust the height of the white background as needed */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* White background with 90% opacity */
+}
+
+.text-container {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 0px !important;
+}
+
+.text-container h1 {
+  color: #000; /* Set your text color */
+  font-size: 3rem; /* Adjust the font size as needed */
 }

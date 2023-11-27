@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
 import Container from "react-bootstrap/Container";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
@@ -20,6 +20,7 @@ import {
 function PostJob() {
   const dispatch = useDispatch();
   const { id } = useParams();
+  const history = useNavigate();
 
   window.console.log(id);
 
@@ -77,6 +78,10 @@ function PostJob() {
   if (error) {
     return <h1>{error}</h1>;
   }
+
+  const handleClose = () => {
+    history("/manager-homepage");
+  };
 
   return (
     <>
@@ -251,7 +256,11 @@ function PostJob() {
               </Row> */}
               <Row className="text-center mt-5">
                 <Col>
-                  <Button variant="secondary" style={{ marginRight: "1rem" }}>
+                  <Button
+                    variant="secondary"
+                    style={{ marginRight: "1rem" }}
+                    onClick={() => handleClose()}
+                  >
                     Close
                   </Button>{" "}
                   <Button

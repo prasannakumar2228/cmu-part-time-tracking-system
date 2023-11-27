@@ -3,13 +3,25 @@ import cmulogo from "../Images/cmu_background.jpg";
 import logo from "../Images/cmich_logo.png";
 import "./styles.css";
 import Container from "react-bootstrap/Container";
+import moment from "moment";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
 
 function HomePage() {
+  const jobDate = localStorage.getItem("date");
+  window.console.log("jobDate:", jobDate);
+
+  const isValidDate = moment(jobDate, "YYYY-MM-DD", true).isValid();
+  window.console.log("isValidDate:", isValidDate);
+
+  const formattedDate = isValidDate
+    ? moment(jobDate).format("MM-DD-YYYY")
+    : "Coming soon...!";
+
   return (
     <div
+      className="background-container"
       style={{
         backgroundImage: `url(${cmulogo})`,
         backgroundPosition: "center",
@@ -24,14 +36,6 @@ function HomePage() {
           <Navbar.Brand to="/" as={Link}>
             <img src={logo} alt="logo" height={50} width={250} />
           </Navbar.Brand>
-          {/* <Nav className="me-auto">
-          <Nav.Link to="/" as={Link}>
-            Home
-          </Nav.Link>
-          <Nav.Link to="/my-account" as={Link}>
-            My Account
-          </Nav.Link>
-        </Nav> */}
 
           <Nav>
             <Nav.Link className="nav_link" to="/" as={Link}>
@@ -43,6 +47,11 @@ function HomePage() {
           </Nav>
         </Container>
       </Navbar>
+      <div className="white-background">
+        <div className="text-container">
+          <h2>The job fair will start: {formattedDate}</h2>
+        </div>
+      </div>
     </div>
   );
 }

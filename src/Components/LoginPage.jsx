@@ -46,6 +46,7 @@ function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    localStorage.setItem("username", username);
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/login/",
@@ -63,7 +64,12 @@ function LoginPage() {
 
       // Handle successful login, e.g., store the token in localStorage
       console.log("Login successful!", response.data);
-      history("/manager-homepage");
+      if (response?.data?.role === "Student") {
+        history("/student-homepage");
+      }
+      if (response?.data?.role === "Manager") {
+        history("/manager-homepage");
+      }
     } catch (error) {
       // Handle login failure
       console.error("Login failed!", error.message);

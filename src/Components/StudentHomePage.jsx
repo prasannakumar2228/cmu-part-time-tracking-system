@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import "./styles.css";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
+import moment from "moment";
+import { useNavigate } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
@@ -13,55 +15,66 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Spinner from "react-bootstrap/Spinner";
 import { getJobApplications } from "../redux/student";
+import { getJobs } from "../redux/manager";
 
 function StudentHomePage() {
+  const history = useNavigate();
+
+  const handlePage = (data) => {
+    window.console.log(data?.row);
+    if (data?.row?.id) {
+      history(`/apply-job/${data?.row?.id}`);
+    }
+  };
+
   const columns = [
     {
-      field: "AcademicStatus",
-      headerName: "Academic Status",
-      width: 200,
-      label: (params) => {
-        return <span className="">{params.row.AcademicStatus}</span>;
-      },
-    },
-    {
-      field: "ApplicationStatus",
-      headerName: "Application Status",
-      width: 200,
-      label: (params) => {
-        return <span className="">{params.row.ApplicationStatus}</span>;
-      },
-    },
-    {
-      field: "DesiredWorkHours",
-      headerName: "Work Hours",
-      width: 100,
-      label: (params) => {
-        return <span className="">{params.row.DesiredWorkHours}</span>;
-      },
-    },
-    {
-      field: "Skills",
-      headerName: "Skills",
+      field: "Title",
+      headerName: "Department Name",
       width: 300,
       label: (params) => {
-        return <span className="">{params.row.Skills}</span>;
+        return <span className="">{params.row.Title}</span>;
+      },
+    },
+    {
+      field: "NumberOfOpenings",
+      headerName: "Openings",
+      width: 100,
+      label: (params) => {
+        return <span className="">{params.row.NumberOfOpenings}</span>;
       },
     },
     {
       field: "Experience",
       headerName: "Experience",
-      width: 200,
+      width: 300,
       label: (params) => {
         return <span className="">{params.row.Experience}</span>;
       },
     },
     {
-      field: "Student",
-      headerName: "Applied Student",
-      width: 200,
+      field: "WorkHours",
+      headerName: "Work Hours",
+      width: 100,
       label: (params) => {
-        return <span className="">{params.row.Student}</span>;
+        return <span className="">{params.row.WorkHours}</span>;
+      },
+    },
+    {
+      field: "Deadline",
+      headerName: "Deadline",
+      width: 200,
+
+      renderCell: (params) => (
+        <div>{moment(params.row.Deadline).format("MM-DD-YYYY")}</div>
+      ),
+    },
+    {
+      field: "Status",
+      headerName: "Status",
+      width: 100,
+      label: (params) => {
+        return <span className="">{params.row.Status}</span>;
       },
     },
     {
@@ -71,7 +84,9 @@ function StudentHomePage() {
         return (
           <div className="d-flex">
             <div style={{ marginRight: "5px" }}>
-              <Button variant="outline-info">Apply Job</Button>{" "}
+              <Button variant="outline-info" onClick={() => handlePage(params)}>
+                Apply Job
+              </Button>{" "}
             </div>
           </div>
         );
@@ -81,13 +96,21 @@ function StudentHomePage() {
 
   const dispatch = useDispatch();
 
+  // useEffect(() => {
+  //   dispatch(getJobApplications());
+  // }, [dispatch]);
+
+  // const jobApp = useSelector((state) => state.student.jobApplications);
+  // const isLoading = useSelector((state) => state.student.isLoading);
+  // const error = useSelector((state) => state.student.error);
+
   useEffect(() => {
-    dispatch(getJobApplications());
+    dispatch(getJobs());
   }, [dispatch]);
 
-  const jobApp = useSelector((state) => state.student.jobApplications);
-  const isLoading = useSelector((state) => state.student.isLoading);
-  const error = useSelector((state) => state.student.error);
+  const jobs = useSelector((state) => state.manager.jobPosts);
+  const isLoading = useSelector((state) => state.manager.isLoading);
+  const error = useSelector((state) => state.manager.error);
 
   if (isLoading) {
     return (
@@ -100,8 +123,6 @@ function StudentHomePage() {
   if (error) {
     return <h1>{error}</h1>;
   }
-
-  window.console.log(jobApp);
 
   return (
     <>
@@ -118,11 +139,11 @@ function StudentHomePage() {
             My Account
           </Nav.Link>
         </Nav> */}
-          {/* <Nav>
-            <Nav.Link className="nav_link" to="/" as={Link}>
-              <Button variant="outline-light">Apply Job</Button>{" "}
+          <Nav>
+            <Nav.Link className="nav_link" to="/my-applications" as={Link}>
+              <Button variant="outline-light">My Applications</Button>{" "}
             </Nav.Link>
-          </Nav> */}
+          </Nav>
         </Container>
       </Navbar>
       <Container fluid className="p-5">
@@ -134,8 +155,8 @@ function StudentHomePage() {
             <Row>
               <Col>
                 <DataGrid
-                  {...jobApp}
-                  rows={jobApp}
+                  {...jobs}
+                  rows={jobs}
                   columns={columns}
                   initialState={{
                     pagination: {

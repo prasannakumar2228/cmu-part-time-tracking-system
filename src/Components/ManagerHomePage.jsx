@@ -26,6 +26,17 @@ function ManagerHomePage(props) {
   const handleClose = () => setModalShow(false);
   const handleShow = () => setModalShow(true);
   const [date, setDate] = useState(new Date());
+  const handleCloseSetDate = () => {
+    setModalShow(false);
+    localStorage.setItem("date", date);
+  };
+
+  const currentDate = new Date();
+  const minDate = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate()
+  );
 
   const dispatch = useDispatch();
 
@@ -153,8 +164,6 @@ function ManagerHomePage(props) {
     return <h1>{error}</h1>;
   }
 
-  window.console.log(jobs);
-
   return (
     <>
       <Navbar className="nav-background">
@@ -222,7 +231,11 @@ function ManagerHomePage(props) {
         </Modal.Header>
         <Modal.Body className="p-5">
           {" "}
-          <Calendar onChange={handleDateChange} value={date} />
+          <Calendar
+            onChange={handleDateChange}
+            value={date}
+            minDate={minDate}
+          />
           <h5 className="mt-3">
             {date instanceof Date
               ? `Selected Date: ${format(date, "MM-dd-yyyy")}`
@@ -231,7 +244,7 @@ function ManagerHomePage(props) {
           <Button
             variant="outline-success"
             className="mt-3"
-            onClick={handleClose}
+            onClick={handleCloseSetDate}
           >
             OK
           </Button>
