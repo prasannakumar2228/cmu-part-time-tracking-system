@@ -11,8 +11,9 @@ const initialState = {
 export const getJobApplications = createAsyncThunk(
   "student/getJobApplications",
   async () => {
+    const user = localStorage.getItem("username");
     const { data } = await axios.get(
-      "http://127.0.0.1:8000/api/jobapplications/"
+      `http://127.0.0.1:8000/api/jobapplications/${user}`
     );
     return data;
   }

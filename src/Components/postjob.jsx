@@ -16,6 +16,7 @@ import {
   updateJobs,
   fetchDatabyID,
 } from "../redux/manager";
+import { getStudentDetails } from "../redux/signUp";
 
 function PostJob() {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ function PostJob() {
   const history = useNavigate();
 
   window.console.log(id);
+  const username = localStorage.getItem("username");
 
   const profileData = useSelector((state) => state.manager.profile);
   const putData = useSelector((state) => state.manager.updateData);
@@ -43,17 +45,29 @@ function PostJob() {
     setFormData(putData || profileData || {});
   }, [putData, profileData]);
 
+  useEffect(() => {
+    if (username) {
+      dispatch(getStudentDetails(username));
+    }
+  }, [username]);
+
+  const studentId = useSelector((state) => state.home.studentDetails);
+  window.console.log(studentId);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const dataWithId = { ...formData, id };
+    const Manager = JSON.stringify(studentId);
+    const dataWithManagerId = { ...formData, Manager };
+    const dataWithId = { ...dataWithManagerId, id };
     console.log("Data with ID:", JSON.stringify(dataWithId));
 
-    const action = formData?.id ? updateJobs(dataWithId) : postJobs(formData);
+    const action = formData?.id
+      ? updateJobs(dataWithId)
+      : postJobs(dataWithManagerId);
     dispatch(action)
       .unwrap()
       .then((result) => {
@@ -68,6 +82,7 @@ function PostJob() {
   };
 
   if (isLoading) {
+    // window.location.reload();
     return (
       <h1>
         <Spinner animation="grow" />
@@ -76,11 +91,21 @@ function PostJob() {
   }
 
   if (error) {
-    return <h1>{error}</h1>;
+    window.location.reload();
+    return <Spinner animation="border" />;
   }
 
   const handleClose = () => {
     history("/manager-homepage");
+    window.location.reload();
+  };
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const day = today.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
   };
 
   return (
@@ -173,6 +198,7 @@ function PostJob() {
                     name="DateOfPosting"
                     value={formData.DateOfPosting}
                     onChange={handleChange}
+                    min={getCurrentDate()}
                   />
                 </Form.Group>
 
@@ -184,6 +210,7 @@ function PostJob() {
                     name="Deadline"
                     value={formData.Deadline}
                     onChange={handleChange}
+                    min={getCurrentDate()}
                   />
                 </Form.Group>
               </Row>

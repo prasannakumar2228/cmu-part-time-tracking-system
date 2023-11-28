@@ -109,6 +109,7 @@ function ApplyJob() {
         formData?.WorkStudyEligibility === "YES" ? true : false,
       jobPost: id ? id : "",
       Student: studentId ? studentId : "",
+      ApplicationStatus: "waitlist",
     };
 
     dispatch(postJobApplications(data))

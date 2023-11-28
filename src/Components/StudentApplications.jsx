@@ -24,8 +24,8 @@ function StudentApplications() {
   const userName = localStorage.getItem("username");
 
   const handlePage = (data) => {
-    window.console.log(data?.row?.id, userName);
-    const jobid = data?.row?.id;
+    window.console.log(data?.row?.jobPost, userName);
+    const jobid = data?.row?.jobPost;
     dispatch(getWaitlistCount(jobid, userName));
 
     setShow(true);
@@ -121,7 +121,7 @@ function StudentApplications() {
   const error = useSelector((state) => state.student.error);
   const [show, setShow] = useState(false);
 
-  window.console.log(jobCount);
+  window.console.log(jobCount?.position);
 
   if (isLoading) {
     return (
@@ -134,7 +134,38 @@ function StudentApplications() {
   window.console.log(error);
 
   if (error) {
-    return <h1>{error}</h1>;
+    return (
+      <>
+        <Navbar className="nav-background">
+          <Container>
+            <Navbar.Brand to="/" as={Link}>
+              <img src={logo} alt="logo" height={50} width={250} />
+            </Navbar.Brand>{" "}
+            {/* <Nav className="me-auto">
+      <Nav.Link to="/" as={Link}>
+        Home
+      </Nav.Link>
+      <Nav.Link to="/my-account" as={Link}>
+        My Account
+      </Nav.Link>
+    </Nav> */}
+            {/* <Nav>
+        <Nav.Link className="nav_link" to="/" as={Link}>
+          <Button variant="outline-light">Apply Job</Button>{" "}
+        </Nav.Link>
+      </Nav> */}
+          </Container>
+        </Navbar>
+        <Container fluid className="p-5">
+          <Card>
+            <Card.Header>
+              <b>Job Openings</b>
+            </Card.Header>
+            <Card.Body className="text-center">No Job Applications</Card.Body>
+          </Card>
+        </Container>
+      </>
+    );
   }
 
   return (
@@ -190,7 +221,12 @@ function StudentApplications() {
         <Modal.Header closeButton>
           <Modal.Title>Wait List</Modal.Title>
         </Modal.Header>
-        <Modal.Body>You are in the Waitlist Position of </Modal.Body>
+        <Modal.Body>
+          <h5>
+            You are in the Waitlist Position of:{" "}
+            <b>{jobCount ? jobCount?.position : ""}</b>
+          </h5>
+        </Modal.Body>
       </Modal>
     </>
   );

@@ -46,33 +46,35 @@ function SignupPage({ authSignUp }) {
     };
   };
 
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordMatch, setPasswordMatch] = useState(true);
   const [phone, setPhone] = useState("");
 
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
   const handlePasswordChange = (e) => {
-    const newPassword = e.target.value;
-    setPassword(newPassword);
-    setPasswordMatch(newPassword === confirmPassword || confirmPassword === "");
+    setPassword(e.target.value);
   };
 
   const handleConfirmPasswordChange = (e) => {
-    const newConfirmPassword = e.target.value;
-    setConfirmPassword(newConfirmPassword);
-    setPasswordMatch(password === newConfirmPassword || password === "");
+    setConfirmPassword(e.target.value);
   };
 
-  const getPasswordValidationColor = () => {
-    if (!touched.password) return "";
-    return errors.password ? "red" : "green";
+  const handleBlurPassword = () => {
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters");
+    } else {
+      setPasswordError("");
+    }
   };
 
-  const getConfirmPasswordValidationColor = () => {
-    if (!touched.password || !touched.confirmPassword) return "";
-    return passwordMatch ? "green" : "red";
+  const handleBlurConfirmPassword = () => {
+    if (confirmPassword !== password) {
+      setPasswordError("Passwords do not match");
+    } else {
+      setPasswordError("");
+    }
   };
-
   const {
     getFieldProps,
     handleSubmit,
@@ -143,9 +145,6 @@ function SignupPage({ authSignUp }) {
       setError("signup failed...");
     }
   };
-
-  const passwordColor = passwordMatch ? "green" : "red";
-  const confirmPasswordColor = passwordMatch ? "green" : "red";
 
   return (
     <>
@@ -262,7 +261,9 @@ function SignupPage({ authSignUp }) {
                     <Row>
                       <Col xs="6">
                         <Form.Group className="mb-3">
-                          <Form.Label>Global Id</Form.Label>
+                          <Form.Label>
+                            Global Id <span style={{ color: "red" }}>*</span>
+                          </Form.Label>
                           <Form.Control
                             type="text"
                             placeholder="Enter your Global ID"
@@ -296,17 +297,18 @@ function SignupPage({ authSignUp }) {
                     <Row>
                       <Col xs="6">
                         <Form.Group className="mb-3">
-                          <Form.Label>Password</Form.Label>
+                          <Form.Label>
+                            Password <span style={{ color: "red" }}>*</span>
+                          </Form.Label>
                           <Form.Control
                             type="password"
                             placeholder="Enter Password"
                             value={password}
                             onChange={handlePasswordChange}
-                            style={{
-                              borderColor: getPasswordValidationColor(),
-                            }}
-                            minLength="6"
-                            maxLength="15"
+                            onBlur={handleBlurPassword}
+                            className={passwordError ? "error" : ""}
+                            // minLength="6"
+                            // maxLength="15"
                             {...getFieldProps("password")}
                             invalid={!!touched.password && !!errors.password}
                           />
@@ -327,16 +329,12 @@ function SignupPage({ authSignUp }) {
                             placeholder="Enter Confirm Password"
                             value={confirmPassword}
                             onChange={handleConfirmPasswordChange}
-                            style={{
-                              borderColor: getConfirmPasswordValidationColor(),
-                            }}
+                            onBlur={handleBlurConfirmPassword}
+                            className={passwordError ? "error" : ""}
                           />
                         </Form.Group>
                       </Col>
                     </Row>
-                    {!passwordMatch && (
-                      <p style={{ color: "red" }}>Passwords do not match!</p>
-                    )}
 
                     <Row>
                       <Col xs="6">
@@ -345,7 +343,9 @@ function SignupPage({ authSignUp }) {
                           className="mb-3"
                           // controlId="formGroupPassword"
                         >
-                          <Form.Label>Role</Form.Label>
+                          <Form.Label>
+                            Role <span style={{ color: "red" }}>*</span>
+                          </Form.Label>
                           <Select
                             id="Role"
                             name="Role"

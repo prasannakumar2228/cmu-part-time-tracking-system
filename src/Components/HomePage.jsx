@@ -12,10 +12,10 @@ function HomePage() {
   const jobDate = localStorage.getItem("date");
   window.console.log("jobDate:", jobDate);
 
-  const isValidDate = moment(jobDate, "YYYY-MM-DD", true).isValid();
-  window.console.log("isValidDate:", isValidDate);
+  // const isValidDate = moment(jobDate, "MM-DD-YYYY", true).isValid();
+  // window.console.log("isValidDate:", isValidDate);
 
-  const formattedDate = isValidDate
+  const formattedDate = jobDate
     ? moment(jobDate).format("MM-DD-YYYY")
     : "Coming soon...!";
 
@@ -47,6 +47,12 @@ function HomePage() {
           </Nav>
         </Container>
       </Navbar>
+      <div>
+        <div className="text-header">
+          <h1>Welcome</h1>
+          <h1>CMU Part Time Tracking System</h1>
+        </div>
+      </div>
       <div className="white-background">
         <div className="text-container">
           <h2>The job fair will start: {formattedDate}</h2>

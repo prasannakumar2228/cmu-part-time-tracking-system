@@ -3,6 +3,7 @@ import axios from "axios";
 
 const initialState = {
   jobPosts: [],
+  filterJobs: [],
   isLoading: false,
   error: null,
   profile: {
@@ -24,6 +25,17 @@ export const getJobs = createAsyncThunk("manager/getJobs", async () => {
   const { data } = await axios.get("http://127.0.0.1:8000/api/jobposts/");
   return data;
 });
+
+export const getFilterJobs = createAsyncThunk(
+  "manager/getFilterJobs",
+  async () => {
+    const user = localStorage.getItem("username");
+    const { data } = await axios.get(
+      `http://127.0.0.1:8000/api/jobposts/${user}/`
+    );
+    return data;
+  }
+);
 
 export const postJobs = createAsyncThunk("manager/postJobs", async (data) => {
   const { response } = await axios.post(
@@ -144,6 +156,17 @@ export const homeSlice = createSlice({
       );
     });
     builder.addCase(deleteJob.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    });
+    builder.addCase(getFilterJobs.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getFilterJobs.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.filterJobs = action.payload;
+    });
+    builder.addCase(getFilterJobs.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });

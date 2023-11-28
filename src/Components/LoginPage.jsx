@@ -20,30 +20,6 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  // const dispatch = useDispatch();
-
-  // const isLoading = useSelector((state) => state.home.isLoading);
-  // const error = useSelector((state) => state.home.error);
-
-  // if (isLoading) {
-  //   return (
-  //     <h1>
-  //       <Spinner animation="grow" />
-  //     </h1>
-  //   );
-  // }
-
-  // if (error) {
-  //   return <h1>{error}</h1>;
-  // }
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const userData = { username, password };
-  //   dispatch(postLogin(JSON.stringify(userData)));
-  //   // window.location.href = "/";
-  // };
-
   const handleLogin = async (e) => {
     e.preventDefault();
     localStorage.setItem("username", username);
@@ -51,18 +27,16 @@ function LoginPage() {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/login/",
         {
-          // Convert data to JSON string using JSON.stringify
           username,
           password,
         },
         {
           headers: {
-            "Content-Type": "application/json", // Set the content type to JSON
+            "Content-Type": "application/json",
           },
         }
       );
 
-      // Handle successful login, e.g., store the token in localStorage
       console.log("Login successful!", response.data);
       if (response?.data?.role === "Student") {
         history("/student-homepage");
@@ -71,7 +45,6 @@ function LoginPage() {
         history("/manager-homepage");
       }
     } catch (error) {
-      // Handle login failure
       console.error("Login failed!", error.message);
       setError("Login failed. Please check your username and password.");
     }
@@ -99,12 +72,12 @@ function LoginPage() {
                   <hr />
                   <Form>
                     <Form.Group className="mb-3" controlId="formGroupEmail">
-                      <Form.Label>Email address</Form.Label>
+                      <Form.Label>Global ID</Form.Label>
                       <Form.Control
                         type="text"
                         value={username}
                         onChange={(e) => setUserName(e.target.value)}
-                        placeholder="Enter email"
+                        placeholder="Enter Your Global ID"
                       />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupPassword">
@@ -113,7 +86,7 @@ function LoginPage() {
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Password"
+                        placeholder="Enter Your Password"
                       />
                     </Form.Group>
                     <Form.Group
@@ -151,128 +124,6 @@ function LoginPage() {
             </Col>
           </Row>
         </Container>
-        {/* <Card className="loginCard">
-          <Card.Body>
-            <Row>
-              <Col xs="6">
-                <img
-                  src={cmulogo}
-                  alt="CMU Logo"
-                  height={150}
-                  width={150}
-                  className="align-items-center justify-content-center"
-                />
-              </Col>
-              <Col xs="6">
-                <Row className="justify-content-center my-5">
-                  <Col>
-                    <Card>
-                      <Card.Body>
-                        <Card.Title className="justify-content-center text-center">
-                          Login Page
-                        </Card.Title>
-                        <hr />
-                        <Form>
-                          <Form.Group
-                            className="mb-3"
-                            controlId="formGroupEmail"
-                          >
-                            <Form.Label>Email address</Form.Label>
-                            <Form.Control
-                              type="email"
-                              placeholder="Enter email"
-                            />
-                          </Form.Group>
-                          <Form.Group
-                            className="mb-3"
-                            controlId="formGroupPassword"
-                          >
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control
-                              type="password"
-                              placeholder="Password"
-                            />
-                          </Form.Group>
-                          <Form.Group
-                            className="mb-3"
-                            // controlId="formGroupPassword"
-                          >
-                            <Form.Label>Role</Form.Label>
-                            <Select options={options} />
-                          </Form.Group>
-                          <Form.Group
-                            as={Row}
-                            className="mb-3"
-                            controlId="formHorizontalCheck"
-                          >
-                            <Col sm={{ span: 11, offset: 1 }}>
-                              <Form.Check label="Remember me" />
-                            </Col>
-                          </Form.Group>
-                          <Form.Group as={Row} className="mb-3">
-                            <Col sm={{ span: 11, offset: 1 }}>
-                              <Button type="submit">Sign in</Button>
-                            </Col>
-                          </Form.Group>
-                        </Form>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card> */}
-
-        {/* <img src={cmichImage} className="central_logo" alt="img" height={400} width={400} /> */}
-        {/* <Image src={cmichImage} roundedCircle height={400} width={400} /> */}
-
-        {/* <Row className="justify-content-center my-5">
-                <Col>
-                  <Card>
-                    <Card.Body>
-                        
-                      <Card.Title className="justify-content-center text-center">
-                        Login Page
-                      </Card.Title>
-                      <hr />
-                      <Form>
-                        <Form.Group className="mb-3" controlId="formGroupEmail">
-                          <Form.Label>Email address</Form.Label>
-                          <Form.Control
-                            type="email"
-                            placeholder="Enter email"
-                          />
-                        </Form.Group>
-                        <Form.Group
-                          className="mb-3"
-                          controlId="formGroupPassword"
-                        >
-                          <Form.Label>Password</Form.Label>
-                          <Form.Control
-                            type="password"
-                            placeholder="Password"
-                          />
-                        </Form.Group>
-                        <Form.Group
-                          as={Row}
-                          className="mb-3"
-                          controlId="formHorizontalCheck"
-                        >
-                          <Col sm={{ span: 11, offset: 1 }}>
-                            <Form.Check label="Remember me" />
-                          </Col>
-                        </Form.Group>
-                        <Form.Group as={Row} className="mb-3">
-                          <Col sm={{ span: 11, offset: 1 }}>
-                            <Button type="submit">Sign in</Button>
-                          </Col>
-                        </Form.Group>
-                      </Form>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </Row> */}
       </div>
     </>
   );
