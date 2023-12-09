@@ -139,7 +139,7 @@ function PostJob() {
                   <Form.Label>Number of Openings</Form.Label>
                   <Form.Control
                     type="number"
-                    placeholder="Enter Department Name"
+                    placeholder="Enter Number of Openings"
                     name="NumberOfOpenings"
                     value={formData.NumberOfOpenings}
                     onChange={handleChange}
@@ -150,7 +150,7 @@ function PostJob() {
                   <Form.Label>Experience</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter Job Type"
+                    placeholder="Enter Experience"
                     name="Experience"
                     value={formData.Experience}
                     onChange={handleChange}

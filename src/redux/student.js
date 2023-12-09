@@ -4,6 +4,7 @@ import axios from "axios";
 const initialState = {
   jobApplications: [],
   count: {},
+  updateJobApp: [],
   isLoading: false,
   error: null,
 };
@@ -49,6 +50,23 @@ export const getWaitlistCount = createAsyncThunk(
   }
 );
 
+export const updateJobApplications = createAsyncThunk(
+  "student/updateJobApplications",
+  async (payload) => {
+    window.console.log(payload);
+    const { data } = await axios.put(
+      `http://127.0.0.1:8000/api/jobapplications/${payload?.finalID}/`,
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return data;
+  }
+);
+
 export const homeSlice = createSlice({
   name: "student",
   initialState,
@@ -84,6 +102,17 @@ export const homeSlice = createSlice({
       state.count = action.payload;
     });
     builder.addCase(getWaitlistCount.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    });
+    builder.addCase(updateJobApplications.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updateJobApplications.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.updateJobApp = action.payload;
+    });
+    builder.addCase(updateJobApplications.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });

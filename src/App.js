@@ -8,6 +8,7 @@ import PostJob from "./Components/postjob";
 import StudentHomePage from "./Components/StudentHomePage";
 import ApplyJob from "./Components/ApplyJob";
 import StudentApplications from "./Components/StudentApplications";
+import HirePage from "./Components/hirePage";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
         <Route path="/apply-job" element={<ApplyJob />} />
         <Route path="/apply-job/:id" element={<ApplyJob />} />
         <Route path="/my-applications" element={<StudentApplications />} />
+        <Route path="/hiring-details" element={<HirePage />} />
+        <Route path="/hiring-details/:id" element={<HirePage />} />
       </Routes>
     </BrowserRouter>
   );

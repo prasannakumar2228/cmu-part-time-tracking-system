@@ -69,7 +69,7 @@ function StudentApplications() {
       headerName: "Application Status",
       width: 200,
 
-      label: (params) => <div>{moment(params.row.ApplicationStatus)}</div>,
+      label: (params) => <div>{params.row.ApplicationStatus}</div>,
     },
     {
       field: "WorkStudyEligibility",
@@ -90,9 +90,23 @@ function StudentApplications() {
         return (
           <div className="d-flex">
             <div style={{ marginRight: "5px" }}>
-              <Button variant="outline-info" onClick={() => handlePage(params)}>
-                Wait List
-              </Button>{" "}
+              {params.row.ApplicationStatus === "approved" ||
+              params.row.ApplicationStatus === "rejected" ? (
+                <Button
+                  variant="outline-info"
+                  onClick={() => handlePage(params)}
+                  disabled
+                >
+                  Wait List
+                </Button>
+              ) : (
+                <Button
+                  variant="outline-info"
+                  onClick={() => handlePage(params)}
+                >
+                  Wait List
+                </Button>
+              )}
             </div>
           </div>
         );

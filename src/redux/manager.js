@@ -19,6 +19,7 @@ const initialState = {
     Experience: "",
   },
   updateData: [],
+  hireDetails: {},
 };
 
 export const getJobs = createAsyncThunk("manager/getJobs", async () => {
@@ -97,6 +98,15 @@ export const deleteJob = createAsyncThunk("manager/deleteJob", async (id) => {
   return data;
 });
 
+export const hireGetData = createAsyncThunk(
+  "manager/hireGetData",
+  async (id) => {
+    const { data } = await axios.get(`http://127.0.0.1:8000/api/hire/${id}/`);
+    window.console.log(data);
+    return data?.applications;
+  }
+);
+
 export const homeSlice = createSlice({
   name: "manager",
   initialState,
@@ -167,6 +177,18 @@ export const homeSlice = createSlice({
       state.filterJobs = action.payload;
     });
     builder.addCase(getFilterJobs.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    });
+
+    builder.addCase(hireGetData.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(hireGetData.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.hireDetails = action.payload;
+    });
+    builder.addCase(hireGetData.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });

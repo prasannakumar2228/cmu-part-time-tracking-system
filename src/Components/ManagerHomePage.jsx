@@ -72,9 +72,14 @@ function ManagerHomePage(props) {
   // ];
 
   const handlePage = (data) => {
-    window.console.log(data?.row);
     if (data?.row?.id) {
       history(`/post-job/${data?.row?.id}`);
+    }
+  };
+
+  const handleNextPage = (data) => {
+    if (data?.row?.id) {
+      history(`/hiring-details/${data?.row?.id}`);
     }
   };
 
@@ -162,7 +167,12 @@ function ManagerHomePage(props) {
               </Button>{" "}
             </div>
             <div>
-              <Button variant="outline-success">Hire</Button>{" "}
+              <Button
+                variant="outline-success"
+                onClick={() => handleNextPage(params)}
+              >
+                Hire
+              </Button>{" "}
             </div>
           </div>
         );

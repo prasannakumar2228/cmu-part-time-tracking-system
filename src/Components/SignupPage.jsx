@@ -11,6 +11,7 @@ import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
+import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
@@ -22,6 +23,18 @@ import Spinner from "react-bootstrap/Spinner";
 import { postSignup } from "../redux/signUp";
 
 function SignupPage({ authSignUp }) {
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
+  });
+
   const history = useNavigate();
   const [error, setError] = useState("");
 
@@ -135,14 +148,19 @@ function SignupPage({ authSignUp }) {
           },
         }
       );
-
-      // Handle successful login, e.g., store the token in localStorage
       console.log("Signup successful!", response.data);
+      Toast.fire({
+        icon: "success",
+        title: "Signup successfully",
+      });
       history("/login");
     } catch (error) {
-      // Handle login failure
       console.error("signup failed!", error.message);
       setError("signup failed...");
+      Toast.fire({
+        icon: "error",
+        title: "Signup failed",
+      });
     }
   };
 

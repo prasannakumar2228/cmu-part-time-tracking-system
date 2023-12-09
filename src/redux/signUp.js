@@ -6,6 +6,7 @@ const initialState = {
   studentDetails: {},
   isLoading: false,
   error: null,
+  loginstudentDetails: {},
 };
 
 export const postSignup = createAsyncThunk("home/postSignup", async () => {
@@ -17,6 +18,16 @@ export const getStudentDetails = createAsyncThunk(
   "home/getStudentDetails",
   async (id) => {
     const { data } = await axios.get(`http://127.0.0.1:8000/api/getid/${id}`);
+    return data;
+  }
+);
+
+export const getLoginUserDetails = createAsyncThunk(
+  "home/getLoginUserDetails",
+  async (id) => {
+    const { data } = await axios.get(
+      `http://127.0.0.1:8000/api/profiles/${id}`
+    );
     return data;
   }
 );
@@ -45,6 +56,17 @@ export const homeSlice = createSlice({
       state.studentDetails = action.payload;
     });
     builder.addCase(getStudentDetails.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    });
+    builder.addCase(getLoginUserDetails.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getLoginUserDetails.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.loginstudentDetails = action.payload;
+    });
+    builder.addCase(getLoginUserDetails.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });
